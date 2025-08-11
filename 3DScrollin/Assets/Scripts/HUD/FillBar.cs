@@ -1,4 +1,5 @@
 ﻿using GameEvent;
+using Player;
 using UnityEngine;
 using UnityEngine.UIElements;
 using Image = UnityEngine.UI.Image;
@@ -13,20 +14,20 @@ namespace HUD{
         [SerializeField] private FillType fillType;
         [SerializeField] private RectTransform fillTransform;
         [SerializeField] private Image fillImage;
-        [SerializeField] private StaminaChangedEvent staminaEvent;
+        [SerializeField] private PlayerCoreData playerCoreData;
 
         private void Awake(){
-            if (staminaEvent == null){
+            if (playerCoreData == null){
                 return;
             }
-            staminaEvent.EventAction += UpdateFillBar;
+            playerCoreData.StaminaChangedActionEvent += UpdateFillBar;
         }
 
         private void OnDestroy(){
-            if (staminaEvent == null){
+            if (playerCoreData == null){
                 return;
             } 
-            staminaEvent.EventAction -= UpdateFillBar;
+            playerCoreData.StaminaChangedActionEvent -= UpdateFillBar;
         }
 
         private void UpdateFillBar(float fillAmount){

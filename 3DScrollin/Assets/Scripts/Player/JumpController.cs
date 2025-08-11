@@ -36,7 +36,6 @@ namespace Player{
         public JumpState CurrentJumpState => _currentJumpState;
 
         void FixedUpdate(){
-            Debug.Log($"IsGrounded: {controller.isGrounded} State: {_currentJumpState}");
             ApplyJumpPhysics();
             UpdateJumpState();
             HandleStateEffects();

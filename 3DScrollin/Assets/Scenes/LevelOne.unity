@@ -1054,7 +1054,7 @@ MonoBehaviour:
   fillType: 1
   fillTransform: {fileID: 328967952}
   fillImage: {fileID: 328967953}
-  staminaEvent: {fileID: 11400000, guid: e92503fe75068614e88ae685f3276082, type: 2}
+  playerCoreData: {fileID: 11400000, guid: 18551c1088a120b41a17a09e829bd28e, type: 2}
 --- !u!225 &407759414
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -2719,16 +2719,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   controller: {fileID: 1189347087}
+  playerCoreData: {fileID: 11400000, guid: 18551c1088a120b41a17a09e829bd28e, type: 2}
   tiredSpeed: 5
   movementSpeed: 10
   sprintSpeed: 20
   jumpForce: 1
   gravityMultiplier: 3
   jumpsAllowed: 3
-  stamina: 3
-  staminaCooldown: 5
-  staminaEvent: {fileID: 11400000, guid: e92503fe75068614e88ae685f3276082, type: 2}
-  coolDownEvent: {fileID: 11400000, guid: 9a7d1aced5ea43f4f8c139aefd8298a1, type: 2}
   targetMovedGameEvent: {fileID: 11400000, guid: 09c3a2c080374224db1c88603485a52b, type: 2}
   jumpController: {fileID: 1189347089}
 --- !u!143 &1189347087
@@ -2788,7 +2785,7 @@ MonoBehaviour:
   minApexThreshold: 3
   fastFallThreshold: -1
   landingRecoveryTime: 0.1
-  doubleJumpForce: 4
+  doubleJumpForce: 2
   controller: {fileID: 1189347087}
 --- !u!1 &1317214407
 GameObject:
