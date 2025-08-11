@@ -12,4 +12,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 19570d1b56cb4240933cba29ab71baf3, type: 3}
   m_Name: UIBlink_CoolDownGameEvent 1
   m_EditorClassIdentifier: 
-  coolDownDuration: 0.25
+  coolDownDuration: 0.2
