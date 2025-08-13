@@ -41,6 +41,9 @@ namespace Player.Stamina{
             _staminaData.Stamina = newStamina;
     
             var staminaPercentage = newStamina / _maxStamina;
+            if (Mathf.Approximately(_staminaData.Stamina, _maxStamina)){
+                return;
+            }
             _staminaData.InvokeStaminaChangedEvent(staminaPercentage);
 
             if (newStamina <= _exhaustionThreshold * _maxStamina)
@@ -54,22 +57,19 @@ namespace Player.Stamina{
             if (_staminaData.IsExhausted || _isCoolingDown){
                 return false;
             }
-
+            
+            if (_staminaData.Stamina <= 0){
+                _staminaData.Stamina = 0;
+                OnStartStaminaCooldown?.Invoke();
+                _staminaData.IsExhausted = true;
+                _isCoolingDown = true;
+                return false;
+            }
+            
             var newStamina = _staminaDrainRate * deltaTime;
             _staminaData.Stamina -= newStamina;
             _staminaData.InvokeStaminaChangedEvent(_staminaData.Stamina/_maxStamina);
-
-            if (!(_staminaData.Stamina <= 0)){
-                return true;
-            }
-
-
-            OnStartStaminaCooldown?.Invoke();
-
-            _staminaData.IsExhausted = true;
-            _isCoolingDown = true;
-            return false;
-
+            return true;
         }
 
         public void Dispose(){

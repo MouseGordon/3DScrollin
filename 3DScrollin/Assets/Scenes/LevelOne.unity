@@ -2698,7 +2698,6 @@ GameObject:
   - component: {fileID: 1189347088}
   - component: {fileID: 1189347087}
   - component: {fileID: 1189347086}
-  - component: {fileID: 1189347089}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -2718,9 +2717,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6a91ddc93ad627c4099643bc04563b92, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  controller: {fileID: 1189347087}
   coreCharacterData: {fileID: 11400000, guid: 2a1217fdd0ec353408869443609d08b4, type: 2}
-  jumpController: {fileID: 1189347089}
   targetMovedGameEvent: {fileID: 11400000, guid: 09c3a2c080374224db1c88603485a52b, type: 2}
 --- !u!143 &1189347087
 CharacterController:
@@ -2763,24 +2760,6 @@ Transform:
   - {fileID: 1973906258}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1189347089
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1189347085}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e4df30c4fcc14dccb6147fcf17f14f61, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  jumpForce: 10
-  minApexThreshold: 3
-  fastFallThreshold: -1
-  landingRecoveryTime: 0.1
-  doubleJumpForce: 8
-  controller: {fileID: 1189347087}
 --- !u!1 &1317214407
 GameObject:
   m_ObjectHideFlags: 0

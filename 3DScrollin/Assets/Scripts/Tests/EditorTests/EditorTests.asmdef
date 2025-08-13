@@ -4,7 +4,12 @@
     "references": [
         "UnityEngine.TestRunner",
         "UnityEditor.TestRunner",
-        "Movement"
+        "Movement",
+        "JumpSystem",
+        "GravitySystem",
+        "StaminaSystem",
+        "GameEvents",
+        "Unity.InputSystem"
     ],
     "includePlatforms": [
         "Editor"

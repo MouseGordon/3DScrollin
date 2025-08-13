@@ -16,3 +16,5 @@ MonoBehaviour:
   maxHealth: 10
   staminaData: {fileID: 11400000, guid: 8e9b2d1e75ce68345950485488276503, type: 2}
   movementData: {fileID: 11400000, guid: 36ba1518d03d4fa4fb8b34b55ce4fee1, type: 2}
+  gravityData: {fileID: 11400000, guid: af16b17c23cd98b4aafcf95260c3cc3b, type: 2}
+  jumpData: {fileID: 11400000, guid: 4eb1d3bd8cb2fbe42886ae682db1ea57, type: 2}

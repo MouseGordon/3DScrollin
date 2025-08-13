@@ -1,32 +1,45 @@
 using GameEvent;
+using Player.Gravity;
+using Player.Jump;
 using Player.Movement;
 using Player.Stamina;
 //using Rewind;
 using UnityEngine;
 
 namespace Player{
-    public class PlayerController : MonoBehaviour{
-        [SerializeField] private CharacterController controller;
+    [DisallowMultipleComponent][RequireComponent(typeof(CharacterController))]
+    public partial class PlayerController : MonoBehaviour{
+        public JumpSystem JumpSystem => _jumpSystem;
+        public CoreCharacterData CoreCharacterData => coreCharacterData;
         [SerializeField] private CoreCharacterData coreCharacterData;
-        [SerializeField] private JumpController jumpController;
         [SerializeField] private TargetMovedGameEvent targetMovedGameEvent;
     
-        private MovementSystem _movementSystem;
+        private CharacterController _controller;
         private PlayerInputHandler _inputHandler;
+        private MovementSystem _movementSystem;
         private StaminaSystem _staminaSystem;
-        private bool _coolDownTriggered;
+        private GravitySystem _gravitySystem;
+        private JumpSystem _jumpSystem;
+       
     
         private void Awake()
         {
-            _inputHandler = new PlayerInputHandler(
-                onMove: direction => _movementSystem.SetMoveDirection(direction),
-                onJump: jumpController.Jump,
-                onSprint: _ => _movementSystem.ToggleSprint()
-            );
+            _controller = GetComponent<CharacterController>();
             
             _staminaSystem = new StaminaSystem(coreCharacterData.StaminaData);
             _movementSystem = new MovementSystem(coreCharacterData.MovementData);
-           
+            _gravitySystem = new GravitySystem(coreCharacterData.GravityData);
+            _jumpSystem = new JumpSystem(
+                jumpData:coreCharacterData.JumpData, 
+                gravity:coreCharacterData.GravityData.GravityForce,
+                groundedGraivty:coreCharacterData.GravityData.GroundedGravity);
+            
+            _inputHandler = new PlayerInputHandler(
+                onMove: direction => _movementSystem.SetMoveDirection(direction),
+                onJump: _jumpSystem.HandleJumpInput,
+                onSprint: _ => _movementSystem.ToggleSprint()
+            );
+            
             _staminaSystem.OnStartStaminaCooldown += StartStaminaCoolDown;
         }
     
@@ -43,7 +56,7 @@ namespace Player{
     
         private void UpdateStamina()
         {
-            if (_coolDownTriggered)
+            if (coreCharacterData.StaminaData.StaminaCoolDownEvent.IsInCooldown)
                 return;
             
             var deltaTime = Time.deltaTime;
@@ -58,10 +71,19 @@ namespace Player{
         }
 
         private void FixedUpdate(){
+            // Calculate gravity using gravity system
+            //
+            float gravityVelocity = _gravitySystem.CalculateGravity(_controller.isGrounded);
+        
+            // Calculate jump velocity - we only need the Y component
+            //
+            Vector3 jumpMovement = _jumpSystem.CalculateJumpVelocity(_controller.isGrounded);
+            float combinedVerticalVelocity = jumpMovement.y + gravityVelocity * Time.fixedDeltaTime;
             
-            controller.Move(jumpController.ApplyPhysics());
-            jumpController.UpdateJumpState();
-            controller.Move(_movementSystem.Move(jumpController.Velocity, coreCharacterData.StaminaData.IsExhausted));
+            // Apply horizontal movement with the combined vertical velocity
+            //
+            Vector3 finalMovement = _movementSystem.Move(combinedVerticalVelocity, coreCharacterData.StaminaData.IsExhausted);
+            _controller.Move(finalMovement);
         }
 
         private void OnDestroy()

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using NUnit.Framework;
 using Player.Movement;
 using UnityEngine;
@@ -72,6 +73,8 @@ namespace Tests.EditorTests.Editor{
         [Test]
         public void ToggleSprint_WhenToggledTwice_ReturnToNormalSpeed()
         {
+            _movementSystem.SetMoveDirection(Vector2.right);
+            
             // First toggle to sprint
             _movementSystem.ToggleSprint();
             var movement1 = _movementSystem.Move(0);
@@ -154,39 +157,101 @@ namespace Tests.EditorTests.Editor{
             Assert.That(movement.magnitude, Is.EqualTo(normalMovement.magnitude));
         }
        
-      
-       
-        //  check this test when jump is refactored
-        //
-        /*[TestCase(0f, Description = "No jump")]
-        [TestCase(5f, Description = "Normal jump")]
-        [TestCase(-2f, Description = "Downward movement")]
-        public void Move_WithDifferentJumpVelocities_AppliesCorrectVerticalMovement(float jumpVelocity)
+        [Test]
+        [Category("Memory")]
+        public void MovementSystem_UnderLoad_MaintainsStableMemory()
         {
-            var movement = _movementSystem.Move(jumpVelocity);
-            Assert.That(movement.y, Is.EqualTo(jumpVelocity * _movementData.MovementSpeed * Time.fixedDeltaTime)
-                .Within(0.001f));
-        }*/
-        
-        /*[Test]
-      public void Move_DiagonalMovement_MaintainsProperMagnitude()
-      {
-          _movementSystem.SetMoveDirection(new Vector2(1f, 1f).normalized);
-          var movement = _movementSystem.Move(0);
-          var expectedMagnitude = _movementData.MovementSpeed * Time.fixedDeltaTime;
+            var initialMemory = GC.GetTotalMemory(true);
+    
+            // Simulate heavy load
+            //
+            for (int i = 0; i < 10000; i++)
+            {
+                _movementSystem.SetMoveDirection(new Vector2(
+                    UnityEngine.Random.Range(-1f, 1f),
+                    UnityEngine.Random.Range(-1f, 1f)
+                ).normalized);
+                _movementSystem.Move(0);
+            }
+    
+            var finalMemory = GC.GetTotalMemory(true);
+            var memoryDelta = finalMemory - initialMemory;
+    
+            // Ensure no significant memory growth
+            //
+            Assert.That(memoryDelta, Is.LessThan(1024 * 1024)); // Less than 1MB growth
+        }
 
-          Assert.That(movement.magnitude, Is.EqualTo(expectedMagnitude).Within(0.001f));
-      }*/
-        
-         /*[Test]
-        public void Move_WithJumpVelocity_AppliesCorrectVerticalMovement()
+        [Test]
+        [Category("ReplaySystem")]
+        public void MovementSequence_WhenReplayed_MatchesOriginal()
         {
-            float jumpVelocity = 5f;
-            var movement = _movementSystem.Move(jumpVelocity);
+            var movements = new List<Vector2>();
+            var inputs = new List<Vector2>();
+    
+            // Record sequence
+            for (int i = 0; i < 100; i++)
+            {
+                var input = new Vector2(
+                    UnityEngine.Random.Range(-1f, 1f),
+                    UnityEngine.Random.Range(-1f, 1f)
+                ).normalized;
         
-            Assert.That(movement.y, Is.EqualTo(jumpVelocity * _movementData.MovementSpeed * Time.fixedDeltaTime)
-                .Within(0.001f));
-        }*/
+                inputs.Add(input);
+                _movementSystem.SetMoveDirection(input);
+                movements.Add((Vector2)_movementSystem.Move(0));
+            }
+    
+            // Reset and replay
+            _movementSystem = new MovementSystem(_movementData);
+    
+            for (int i = 0; i < inputs.Count; i++)
+            {
+                _movementSystem.SetMoveDirection(inputs[i]);
+                var replayedMovement = (Vector2)_movementSystem.Move(0);
+        
+                // Using Vector2 custom comparison
+                Assert.That(Vector2.Distance(replayedMovement, movements[i]), Is.LessThan(0.0001f), 
+                    $"Movement replay failed at index {i}. Expected {movements[i]}, got {replayedMovement}");
+            }
+        }
+        
+        [Test]
+        [Category("Determinism")]
+        public void Movement_WithSameInputs_ProducesSameOutputs()
+        {
+            var inputs = new[]
+            {
+                Vector2.right,
+                Vector2.one.normalized,
+                Vector2.left
+            };
+    
+            // First run
+            var firstRunResults = new List<Vector2>();
+            foreach (var input in inputs)
+            {
+                _movementSystem.SetMoveDirection(input);
+                firstRunResults.Add(_movementSystem.Move(0));
+            }
+    
+            // Reset
+            _movementSystem = new MovementSystem(_movementData);
+    
+            // Second run
+            var secondRunResults = new List<Vector2>();
+            foreach (var input in inputs)
+            {
+                _movementSystem.SetMoveDirection(input);
+                secondRunResults.Add(_movementSystem.Move(0));
+            }
+    
+            // Compare results
+            for (int i = 0; i < inputs.Length; i++)
+            {
+                Assert.That(firstRunResults[i], Is.EqualTo(secondRunResults[i]));
+            }
+        }
 
     }
 }

@@ -14,6 +14,9 @@ namespace Player.Movement{
         public bool IsSprinting => _sprintToggled && _moveDirection.x != 0;
     
         public MovementSystem(IMovementData iMovementData){
+            if (iMovementData == null){
+                throw new System.ArgumentNullException(nameof(iMovementData));   
+            }
             IMovementData movementData = iMovementData;
 
             _tiredSpeed = movementData.TiredSpeed;
@@ -40,10 +43,16 @@ namespace Player.Movement{
             _currentSpeed = _sprintSpeed;
         }
     
-        public Vector3 Move(float jumpVelocity, bool exhausted = false)
+        public Vector3 Move(float verticalVelocity, bool exhausted = false)
         {
-            float speed = exhausted ? _tiredSpeed : _currentSpeed;
-            return new Vector3(_moveDirection.x, (Vector3.up * (jumpVelocity * Time.fixedDeltaTime)).y, 0) * speed * Time.fixedDeltaTime;
+            float horizontalSpeed = exhausted ? _tiredSpeed : _currentSpeed;
+    
+            return new Vector3(
+                _moveDirection.x * horizontalSpeed * Time.fixedDeltaTime,
+                verticalVelocity,  // vertical velocity already includes Time.fixedDeltaTime from physics calculations
+                0
+            );
         }
+
     }
 }
