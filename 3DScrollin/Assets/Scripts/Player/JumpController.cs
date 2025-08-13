@@ -35,13 +35,12 @@ namespace Player{
         // For debugging/animation
         public JumpState CurrentJumpState => _currentJumpState;
 
-        void FixedUpdate(){
-            ApplyJumpPhysics();
-            UpdateJumpState();
+        public Vector3 ApplyPhysics(){
             HandleStateEffects();
+            return ApplyJumpPhysics();
         }
 
-        private void UpdateJumpState(){
+        public void UpdateJumpState(){
             bool isGrounded = controller.isGrounded;
             float verticalVelocity = _velocity;
 
@@ -78,7 +77,7 @@ namespace Player{
 
         }
 
-        private void ApplyJumpPhysics(){
+        public Vector3 ApplyJumpPhysics(){
             switch (_currentJumpState)
             {
                 case JumpState.Grounded:
@@ -107,14 +106,13 @@ namespace Player{
 
             // Apply the velocity to the controller
             //
-            Vector3 move = Vector3.up * _velocity * Time.fixedDeltaTime;
-            controller.Move(move);
+            Vector3 move = Vector3.up * (_velocity * Time.fixedDeltaTime);
+            //controller.Move(move);
 
             // Clamp fall speed
             //
             _velocity = Mathf.Max(_velocity, -20f);
-
-
+            return move;
         }
 
         private void HandleStateEffects(){

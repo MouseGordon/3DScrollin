@@ -5,14 +5,14 @@ using NUnit.Framework;
 using UnityEngine;
 using UnityEngine.TestTools;
 
-namespace Tests.Playmode{
+namespace PlaymodeTests{
 
     public class CoolDownGameEventIntegrationTests : MonoBehaviour{
         private MonoBehaviour _testGameObject;
         private CoolDownGameEvent _coolDownEvent;
         private bool _startEventFired;
         private bool _endEventFired;
-        
+
         private Action _startHandler;
         private Action<bool> _endHandler;
 
@@ -46,7 +46,7 @@ namespace Tests.Playmode{
 
         [UnityTest]
         public IEnumerator Cooldown_WaitForActualDuration_ShouldComplete(
-            [Values( .2f, .5f, 1.0f, 1.5f )] float duration){
+            [Values(.2f, .5f, 1.0f, 1.5f)] float duration){
             // Arrange
             float startTime = Time.time;
             _coolDownEvent.CoolDownDuration = duration;
@@ -149,10 +149,10 @@ namespace Tests.Playmode{
             Assert.DoesNotThrow(() => _coolDownEvent.StartCoolDown(null),
                 "Should handle null MonoBehaviour gracefully");
         }
-        
+
 
         // Helper class
-        public class TestMonoBehaviour : MonoBehaviour { }
+        public class TestMonoBehaviour : MonoBehaviour{ }
     }
 
 }

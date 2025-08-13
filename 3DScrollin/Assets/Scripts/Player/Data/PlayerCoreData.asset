@@ -14,9 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   health: 10
   maxHealth: 10
-  stamina: 1.6602858
-  maxStamina: 10
-  staminaRecoveryRate: 1
-  staminaDrainRate: 2
-  staminaCoolDownEvent: {fileID: 11400000, guid: 9a7d1aced5ea43f4f8c139aefd8298a1, type: 2}
-  exhaustionThreshold: 0.6
+  staminaData: {fileID: 11400000, guid: 8e9b2d1e75ce68345950485488276503, type: 2}
+  movementData: {fileID: 11400000, guid: 36ba1518d03d4fa4fb8b34b55ce4fee1, type: 2}

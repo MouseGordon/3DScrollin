@@ -14,20 +14,20 @@ namespace HUD{
         [SerializeField] private FillType fillType;
         [SerializeField] private RectTransform fillTransform;
         [SerializeField] private Image fillImage;
-        [SerializeField] private PlayerCoreData playerCoreData;
+        [SerializeField] private CoreCharacterData coreCharacterData;
 
         private void Awake(){
-            if (playerCoreData == null){
+            if (coreCharacterData == null){
                 return;
             }
-            playerCoreData.StaminaChangedActionEvent += UpdateFillBar;
+            coreCharacterData.StaminaData.StaminaChangedActionEvent += UpdateFillBar;
         }
 
         private void OnDestroy(){
-            if (playerCoreData == null){
+            if (coreCharacterData == null){
                 return;
             } 
-            playerCoreData.StaminaChangedActionEvent -= UpdateFillBar;
+            coreCharacterData.StaminaData.StaminaChangedActionEvent -= UpdateFillBar;
         }
 
         private void UpdateFillBar(float fillAmount){

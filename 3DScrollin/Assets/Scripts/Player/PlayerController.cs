@@ -1,176 +1,79 @@
-using System;
 using GameEvent;
+using Player.Movement;
+using Player.Stamina;
 //using Rewind;
 using UnityEngine;
-using UnityEngine.InputSystem;
 
 namespace Player{
     public class PlayerController : MonoBehaviour{
         [SerializeField] private CharacterController controller;
-        [SerializeField] private PlayerCoreData playerCoreData;
-        [SerializeField] private float tiredSpeed = 5;
-        [SerializeField] private float movementSpeed = 10;
-        [SerializeField] private float sprintSpeed = 20;
-        [SerializeField] private float jumpForce = 10;
-        [SerializeField] private float gravityMultiplier = 3;
-        [SerializeField] private int jumpsAllowed = 3;
-        
-        [SerializeField] private TargetMovedGameEvent targetMovedGameEvent;
+        [SerializeField] private CoreCharacterData coreCharacterData;
         [SerializeField] private JumpController jumpController;
-        //[SerializeField] private RewindRecorder recorder;
-        
-        private InputSystem_Actions _inputSystemActions;
-        private InputAction _move;
-        private InputAction _jump;
-        private InputAction _fire;
-        private InputAction _sprint;
-        private InputAction _rewind;
-
-        private float _velocity;
-
-        private Vector2 _moveDirection;
-        private float _currentSpeed;
-        private bool _sprintToggled = false;
-        private bool _coolDownTriggered = false;
-        
-        private bool _rewinding;
+        [SerializeField] private TargetMovedGameEvent targetMovedGameEvent;
+    
+        private MovementSystem _movementSystem;
+        private PlayerInputHandler _inputHandler;
         private StaminaSystem _staminaSystem;
-        
-        private void Awake(){
-            _inputSystemActions = new InputSystem_Actions();
-            _staminaSystem = new StaminaSystem(playerCoreData:playerCoreData,this);
-        }
-
-        // Start is called once before the first execution of Update after the MonoBehaviour is created
-        void OnDestroy(){
-            _staminaSystem.Dispose();
-        }
-
-        private void OnEnable(){
-            _move = _inputSystemActions.Player.Move;
-            _move.Enable();
-            _currentSpeed = movementSpeed;
-
-            _jump = _inputSystemActions.Player.Jump;
-            _jump.Enable();
-            _jump.performed += Jump;
-
-            _fire = _inputSystemActions.Player.Attack;
-            _fire.Enable();
-
-            _sprint = _inputSystemActions.Player.Sprint;
-            _sprint.Enable();
-            _sprint.performed += SprintOnPerformed;
-
-            /*_rewind = _inputSystemActions.Player.Rewind;
-            _rewind.Enable();
-            _rewind.performed += OnRewindOnPerformed;
-            _rewind.canceled += OnRewindOnPerformed;*/
+        private bool _coolDownTriggered;
+    
+        private void Awake()
+        {
+            _inputHandler = new PlayerInputHandler(
+                onMove: direction => _movementSystem.SetMoveDirection(direction),
+                onJump: jumpController.Jump,
+                onSprint: _ => _movementSystem.ToggleSprint()
+            );
             
+            _staminaSystem = new StaminaSystem(coreCharacterData.StaminaData);
+            _movementSystem = new MovementSystem(coreCharacterData.MovementData);
+           
+            _staminaSystem.OnStartStaminaCooldown += StartStaminaCoolDown;
         }
-
-        private void StartStaminaCooldown(){
-            _coolDownTriggered = true;
-        }
-
-        private void OnRewindOnPerformed(InputAction.CallbackContext context){
-            _rewinding = context.performed;
-          
-            if (!context.performed){
-                return;
-            }
-            //recorder.UpdateRewindData(RewindRecorder.RecordState.Playing);
-        }
-
-        private void SprintOnPerformed(InputAction.CallbackContext context){
-            if (Mathf.Approximately(_currentSpeed, sprintSpeed)){
-                _currentSpeed = movementSpeed;
-                _sprintToggled = false;
-                return;
-            }
-
-            _sprintToggled = true;
-
-            _currentSpeed = sprintSpeed;
-        }
-
-        private void OnDisable(){
-            _move.Disable();
-
-            _jump.Disable();
-            _jump.performed -= Jump;
-
-            _fire.Disable();
-            _sprint.performed -= SprintOnPerformed;
-            
-            _rewind.Disable();
-            _rewind.performed -= OnRewindOnPerformed;
-            _rewind.canceled -= OnRewindOnPerformed;
-        }
-
-        // Update is called once per frame
-        void Update(){
-            if (_rewinding){
-                return;
-            }
-            _moveDirection = _move.ReadValue<Vector2>();
-            if (_moveDirection.x > 0){
+    
+        private void Update()
+        {
+            var moveDirection = _inputHandler.GetMoveInput();
+            if (moveDirection.x > 0)
+            {
                 targetMovedGameEvent.EventAction?.Invoke(transform);
             }
-
-            CalculateStamina();
-            //recorder.UpdateRewindData(RewindRecorder.RecordState.Record);
-            
-        }
-
-        private void FixedUpdate(){
-            float speed = playerCoreData.IsExhausted ? tiredSpeed : _currentSpeed;
-            controller.Move(new Vector3(_moveDirection.x, jumpController.Velocity, 0) * speed * Time.fixedDeltaTime);
-        }
-
-        private void Jump(InputAction.CallbackContext context)
-        {
-            jumpController.Jump(context);
-        }
         
-        private void CalculateStamina(){
-           
-            if (_coolDownTriggered){
+            UpdateStamina();
+        }
+    
+        private void UpdateStamina()
+        {
+            if (_coolDownTriggered)
                 return;
-            }
-           
+            
             var deltaTime = Time.deltaTime;
 
-            if (IsSprinting() &&
-                !playerCoreData.IsExhausted){
+            if (_movementSystem.IsSprinting && !coreCharacterData.StaminaData.IsExhausted)
+            {
                 _staminaSystem.TryUseStamina(deltaTime);
                 return;
             }
-            
+        
             _staminaSystem.RecoverStamina(deltaTime);
         }
 
-        private bool IsSprinting(){
-            // is sprint toggled
-            //
-            if (!_sprintToggled){
-                return false;
-            }
+        private void FixedUpdate(){
+            
+            controller.Move(jumpController.ApplyPhysics());
+            jumpController.UpdateJumpState();
+            controller.Move(_movementSystem.Move(jumpController.Velocity, coreCharacterData.StaminaData.IsExhausted));
+        }
 
-            // if we aren't in motion, we aren't sprinting
-            //
-            if (_moveDirection.x == 0){
-                return false;
-            }
+        private void OnDestroy()
+        {
+            _staminaSystem.OnStartStaminaCooldown -= StartStaminaCoolDown;
+            _inputHandler.Dispose();
+            _staminaSystem.Dispose();
+        }
 
-            // if we are out of stamina and the cooldown timer is active, we aren't sprinting
-            //
-            if (_coolDownTriggered){
-                return false;
-            }
-
-
-            return true;
+        private void StartStaminaCoolDown(){
+            coreCharacterData.StaminaData.StaminaCoolDownEvent.StartCoolDown(this);
         }
     }
+
 }

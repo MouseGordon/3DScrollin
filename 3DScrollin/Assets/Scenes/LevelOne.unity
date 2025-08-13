@@ -1054,7 +1054,7 @@ MonoBehaviour:
   fillType: 1
   fillTransform: {fileID: 328967952}
   fillImage: {fileID: 328967953}
-  playerCoreData: {fileID: 11400000, guid: 18551c1088a120b41a17a09e829bd28e, type: 2}
+  coreCharacterData: {fileID: 11400000, guid: 2a1217fdd0ec353408869443609d08b4, type: 2}
 --- !u!225 &407759414
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -2719,15 +2719,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   controller: {fileID: 1189347087}
-  playerCoreData: {fileID: 11400000, guid: 18551c1088a120b41a17a09e829bd28e, type: 2}
-  tiredSpeed: 5
-  movementSpeed: 10
-  sprintSpeed: 20
-  jumpForce: 1
-  gravityMultiplier: 3
-  jumpsAllowed: 3
-  targetMovedGameEvent: {fileID: 11400000, guid: 09c3a2c080374224db1c88603485a52b, type: 2}
+  coreCharacterData: {fileID: 11400000, guid: 2a1217fdd0ec353408869443609d08b4, type: 2}
   jumpController: {fileID: 1189347089}
+  targetMovedGameEvent: {fileID: 11400000, guid: 09c3a2c080374224db1c88603485a52b, type: 2}
 --- !u!143 &1189347087
 CharacterController:
   m_ObjectHideFlags: 0
@@ -2781,11 +2775,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e4df30c4fcc14dccb6147fcf17f14f61, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  jumpForce: 2
+  jumpForce: 10
   minApexThreshold: 3
   fastFallThreshold: -1
   landingRecoveryTime: 0.1
-  doubleJumpForce: 2
+  doubleJumpForce: 8
   controller: {fileID: 1189347087}
 --- !u!1 &1317214407
 GameObject:
