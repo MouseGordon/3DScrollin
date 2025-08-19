@@ -1,0 +1,16 @@
+{
+    "name": "FollowSystem",
+    "rootNamespace": "",
+    "references": [
+        "GUID:94a143cda1b23bd48b9ac30d8c01a826"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

@@ -1,0 +1,16 @@
+{
+    "name": "Companion",
+    "rootNamespace": "",
+    "references": [
+        "GUID:00839b31be761bb4587e6f9f846120e1"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

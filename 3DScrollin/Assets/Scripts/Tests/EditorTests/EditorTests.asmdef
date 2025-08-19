@@ -9,7 +9,9 @@
         "GravitySystem",
         "StaminaSystem",
         "GameEvents",
-        "Unity.InputSystem"
+        "Unity.InputSystem",
+        "FollowSystem",
+        "Companion"
     ],
     "includePlatforms": [
         "Editor"
