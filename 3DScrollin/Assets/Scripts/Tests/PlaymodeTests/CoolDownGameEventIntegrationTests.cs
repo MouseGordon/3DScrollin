@@ -5,8 +5,8 @@ using NUnit.Framework;
 using UnityEngine;
 using UnityEngine.TestTools;
 
-namespace PlaymodeTests{
-
+namespace Tests.PlaymodeTests{
+    [TestFixture]
     public class CoolDownGameEventIntegrationTests : MonoBehaviour{
         private MonoBehaviour _testGameObject;
         private CoolDownGameEvent _coolDownEvent;

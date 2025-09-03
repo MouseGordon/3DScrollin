@@ -1,4 +1,5 @@
 ﻿using GameEvent;
+using GameStateSystems;
 using UnityEngine;
 
 namespace Follow{
@@ -13,20 +14,29 @@ namespace Follow{
         
         public Vector3 Offset => offset;
         public float SmoothTime => smoothTime;
+        protected bool _isInitialized;
 
-        protected virtual void Awake()
-        {
+        protected virtual void Awake(){
+            _isInitialized = false;
             follower = new Follower(this);
             targetMovedGameEvent.EventAction += OnTargetMoved;
+            GameManager.OnGameObjectsInitialize += Initialize;
         }
 
+        protected virtual void Initialize(){
+            _isInitialized = true;
+        }
         protected virtual void OnDestroy()
         {
             targetMovedGameEvent.EventAction -= OnTargetMoved;
+            GameManager.OnGameObjectsInitialize -= Initialize;
         }
 
         protected virtual void FixedUpdate()
         {
+            if (!_isInitialized){
+                return;
+            }
             if (Target == null){
                 return;
             }

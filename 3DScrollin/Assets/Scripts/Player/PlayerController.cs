@@ -1,16 +1,17 @@
+using System;
 using GameEvent;
+using GameStateSystems;
 using Player.Gravity;
 using Player.Jump;
 using Player.Movement;
 using Player.Stamina;
+using SaveSystems;
 //using Rewind;
 using UnityEngine;
 
 namespace Player{
     [DisallowMultipleComponent][RequireComponent(typeof(CharacterController))]
-    public partial class PlayerController : MonoBehaviour{
-        public JumpSystem JumpSystem => _jumpSystem;
-        public CoreCharacterData CoreCharacterData => coreCharacterData;
+    public class PlayerController : MonoBehaviour{
         [SerializeField] private CoreCharacterData coreCharacterData;
         [SerializeField] private TargetMovedGameEvent targetMovedGameEvent;
     
@@ -20,10 +21,15 @@ namespace Player{
         private StaminaSystem _staminaSystem;
         private GravitySystem _gravitySystem;
         private JumpSystem _jumpSystem;
-       
+        private bool _initialized;
     
         private void Awake()
         {
+           GameManager.OnGameObjectsInitialize += Initialize;
+           _initialized = false;
+        }
+
+        private void Initialize(){
             _controller = GetComponent<CharacterController>();
             
             _staminaSystem = new StaminaSystem(coreCharacterData.StaminaData);
@@ -41,16 +47,15 @@ namespace Player{
             );
             
             _staminaSystem.OnStartStaminaCooldown += StartStaminaCoolDown;
+            targetMovedGameEvent.EventAction?.Invoke(transform);
+            _initialized = true;
         }
-    
+
         private void Update()
         {
-            var moveDirection = _inputHandler.GetMoveInput();
-            if (moveDirection.x > 0)
-            {
-                targetMovedGameEvent.EventAction?.Invoke(transform);
+            if (!_initialized){
+                return;
             }
-        
             UpdateStamina();
         }
     
@@ -71,6 +76,10 @@ namespace Player{
         }
 
         private void FixedUpdate(){
+
+            if (!_initialized){
+                return;
+            }
             // Calculate gravity using gravity system
             //
             float gravityVelocity = _gravitySystem.CalculateGravity(_controller.isGrounded);
@@ -88,6 +97,7 @@ namespace Player{
 
         private void OnDestroy()
         {
+            GameManager.OnGameObjectsInitialize -= Initialize;
             _staminaSystem.OnStartStaminaCooldown -= StartStaminaCoolDown;
             _inputHandler.Dispose();
             _staminaSystem.Dispose();

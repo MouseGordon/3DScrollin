@@ -8,9 +8,9 @@ namespace Companion{
         [SerializeField] CompanionData companionData;
 
         private IVelocityBasedEffect particleEffect;
-
-        protected override void Awake(){
-            base.Awake();
+        
+        protected override void Initialize(){
+            base.Initialize();
             if (companionParticles == null){
                 companionParticles = GetComponentInChildren<ParticleSystem>();
             }
@@ -18,8 +18,11 @@ namespace Companion{
             particleEffect = new CompanionParticleEffect(
                 companionData);
         }
-
+        
         private void Update(){
+            if (!_isInitialized){
+                return;
+            }
             OnVelocityUpdated(follower.Velocity);
         }
 

@@ -1,0 +1,17 @@
+{
+    "name": "Savables",
+    "rootNamespace": "",
+    "references": [
+        "GUID:4dd4e4b9e35da744eb253c42acec82e2",
+        "GUID:533dc0266f0f51345873238886fa2ddb"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

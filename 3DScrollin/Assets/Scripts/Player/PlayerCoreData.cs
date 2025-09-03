@@ -1,15 +1,13 @@
-using System;
-using GameEvent;
 using Player.Gravity;
 using Player.Jump;
 using Player.Movement;
 using Player.Stamina;
+using SaveSystems;
 using UnityEngine;
 
 namespace Player{
     [CreateAssetMenu(fileName = "PlayerCoreData", menuName = "Scriptable Objects/PlayerCoreData")]
     public class CoreCharacterData : ScriptableObject,ICoreCharacterData{
-      
         public float Health{
             get => health;
             set => health = value;

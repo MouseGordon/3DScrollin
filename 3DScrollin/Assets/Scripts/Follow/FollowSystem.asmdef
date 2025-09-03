@@ -2,7 +2,8 @@
     "name": "FollowSystem",
     "rootNamespace": "",
     "references": [
-        "GUID:94a143cda1b23bd48b9ac30d8c01a826"
+        "GUID:94a143cda1b23bd48b9ac30d8c01a826",
+        "GUID:533dc0266f0f51345873238886fa2ddb"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

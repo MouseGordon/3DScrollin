@@ -11,7 +11,11 @@
         "GameEvents",
         "Unity.InputSystem",
         "FollowSystem",
-        "Companion"
+        "Companion",
+        "SaveSystem",
+        "Savables",
+        "GameStateSystem",
+        "Health"
     ],
     "includePlatforms": [
         "Editor"
