@@ -4,53 +4,43 @@ using UnityEngine;
 
 namespace UI.LoadingUI
 {
+    [RequireComponent(typeof(CanvasGroup))]
     public class LoadingScreenComponent : MonoBehaviour
     {
         [SerializeField] private LoadingStateChannel loadingStateChannel;
-        [SerializeField] private GameObject loadingPanel;
-        [SerializeField] private CanvasGroup canvasGroup;
-        [SerializeField] private float fadeOutDuration = 0.5f;
+        
+        private CanvasGroup _canvasGroup;
+        private float _fadeOutDuration;
 
         private void Awake(){
             // Make sure this persists across scene loads
+            //
             DontDestroyOnLoad(gameObject);
-
-            // Initially hidden until loading starts
-            /*if (canvasGroup != null){
-                canvasGroup.alpha = 0f;
-                canvasGroup.interactable = false;
-                canvasGroup.blocksRaycasts = false;
-            }*/
-
-            /*if (loadingPanel != null){
-                loadingPanel.SetActive(false);
-            }*/
+            _canvasGroup = GetComponent<CanvasGroup>();
+            _fadeOutDuration = loadingStateChannel.FadeOutDuration;
+            
+            loadingStateChannel.OnLoadingStarted += ShowLoadingScreen;
+            loadingStateChannel.OnLoadingCompleted += HideLoadingScreen;
+            
         }
 
-        private void OnEnable(){
-            if (loadingStateChannel != null){
-                loadingStateChannel.OnLoadingStarted += ShowLoadingScreen;
-                loadingStateChannel.OnLoadingCompleted += HideLoadingScreen;
+        private void OnDestroy(){
+            if (loadingStateChannel == null){
+                return;
             }
-        }
-
-        private void OnDisable(){
-            if (loadingStateChannel != null){
-                loadingStateChannel.OnLoadingStarted -= ShowLoadingScreen;
-                loadingStateChannel.OnLoadingCompleted -= HideLoadingScreen;
-            }
+            
+            loadingStateChannel.OnLoadingStarted -= ShowLoadingScreen;
+            loadingStateChannel.OnLoadingCompleted -= HideLoadingScreen;
         }
 
         private void ShowLoadingScreen(){
-            if (loadingPanel != null){
-                loadingPanel.SetActive(true);
+            if (_canvasGroup == null){
+                return;
             }
-
-            if (canvasGroup != null){
-                canvasGroup.alpha = 1f;
-                canvasGroup.interactable = true;
-                canvasGroup.blocksRaycasts = true;
-            }
+            
+            _canvasGroup.alpha = 1f;
+            _canvasGroup.interactable = true;
+            _canvasGroup.blocksRaycasts = true;
         }
 
         private void HideLoadingScreen(){
@@ -58,24 +48,27 @@ namespace UI.LoadingUI
         }
 
         private IEnumerator FadeOutLoadingScreen(){
-            if (canvasGroup != null){
-                float startAlpha = canvasGroup.alpha;
+            if (_canvasGroup != null){
+                float startAlpha = _canvasGroup.alpha;
                 float elapsedTime = 0f;
-
-                while (elapsedTime < fadeOutDuration){
+                
+                while (elapsedTime < _fadeOutDuration){
                     elapsedTime += Time.unscaledDeltaTime;
-                    float alpha = Mathf.Lerp(startAlpha, 0f, elapsedTime / fadeOutDuration);
-                    canvasGroup.alpha = alpha;
+                    float alpha = Mathf.Lerp(startAlpha, 0f, elapsedTime / _fadeOutDuration);
+                    _canvasGroup.alpha = alpha;
                     yield return null;
                 }
 
-                canvasGroup.alpha = 0f;
-                canvasGroup.interactable = false;
-                canvasGroup.blocksRaycasts = false;
+                _canvasGroup.alpha = 0f;
+                _canvasGroup.interactable = false;
+                _canvasGroup.blocksRaycasts = false;
             }
+            
+        }
 
-            if (loadingPanel != null){
-                loadingPanel.SetActive(false);
+        private void OnValidate(){
+            if (loadingStateChannel == null){
+                Debug.LogError($"LoadingStateChannel is null on {name}");
             }
         }
     }

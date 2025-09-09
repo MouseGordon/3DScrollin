@@ -7,6 +7,10 @@ namespace GameStateSystems{
     {
         public event Action OnLoadingStarted;
         public event Action OnLoadingCompleted;
+        
+        public float FadeOutDuration => fadeOutDuration;
+        
+        [SerializeField] private float fadeOutDuration = 0.5f;
 
         public void StartLoading()
         {

@@ -28,5 +28,14 @@ namespace GameStateSystems{
 
             Debug.Log("🎉 Initialization complete!");
         }
+
+        private void OnValidate(){
+            if (saveEventChannel == null){
+                Debug.LogError($"SaveEventChannel is null on {name}");
+            }
+            if (loadingStateChannel == null){
+                Debug.LogError($"LoadingStateChannel is null on {name}");
+            }
+        }
     }
 }
