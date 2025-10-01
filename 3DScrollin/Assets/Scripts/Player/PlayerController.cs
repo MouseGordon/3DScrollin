@@ -1,6 +1,7 @@
 using System;
 using GameEvent;
 using GameStateSystems;
+using Health;
 using Player.Gravity;
 using Player.Jump;
 using Player.Movement;
@@ -21,6 +22,8 @@ namespace Player{
         private StaminaSystem _staminaSystem;
         private GravitySystem _gravitySystem;
         private JumpSystem _jumpSystem;
+        private HealthSystem _healthSystem;
+        
         private bool _initialized;
     
         private void Awake()
@@ -45,6 +48,7 @@ namespace Player{
                 onJump: _jumpSystem.HandleJumpInput,
                 onSprint: _ => _movementSystem.ToggleSprint()
             );
+            _healthSystem = new HealthSystem(coreCharacterData.HealthData);
             
             _staminaSystem.OnStartStaminaCooldown += StartStaminaCoolDown;
             targetMovedGameEvent.EventAction?.Invoke(transform);

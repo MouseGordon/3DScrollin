@@ -1,0 +1,23 @@
+VisualElement {
+}
+
+.radial-background {
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    background-color: rgb(0, 82, 3);
+    position: absolute;
+    transition-property: opacity;
+    transition-duration: 0.1s;
+    transition-timing-function: linear;
+}
+
+.radial-fill {
+    width: 190px;
+    height: 190px;
+    border-radius: 50%;
+    background-color: rgb(0, 255, 0);
+    position: absolute;
+    transform-origin: center;
+}
+

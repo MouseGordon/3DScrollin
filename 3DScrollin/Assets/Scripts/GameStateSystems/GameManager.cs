@@ -5,18 +5,16 @@ using UnityEngine.SceneManagement;
 using UnityEngine.InputSystem;
 
 namespace GameStateSystems{
-    public class GameManager{
+    public class GameManager: IDisposable{
         private static GameManager Instance{ get; set; }
 
         // The one event all game objects should listen to
         public static event Action OnGameObjectsInitialize;
-
-        private SaveEventChannel _saveEventChannel; 
-        private LoadingStateChannel _loadingStateChannel;
         private InputSystem_Actions inputActions;
-
         private InputAction rewind;
-
+        private readonly SaveEventChannel _saveEventChannel; 
+        private readonly LoadingStateChannel _loadingStateChannel;
+        
         public GameManager(SaveEventChannel saveEventChannel, LoadingStateChannel loadingStateChannel){
             Debug.Log("GameManager initializing...");
             _saveEventChannel = saveEventChannel;
@@ -68,14 +66,11 @@ namespace GameStateSystems{
             _loadingStateChannel?.CompleteLoading();
         }
 
-
-        // Helper method for manual scene transitions
-        public void LoadSceneAndNotify(string sceneName, MonoBehaviour coroutineHandler){
-            coroutineHandler.StartCoroutine(LoadScene(sceneName));
-        }
-
-        private void OnDestroy(){
+        public void Dispose(){
+            
             rewind.performed -= TriggerSave;
+            inputActions?.Dispose();
+            rewind?.Dispose();
         }
     }
 }

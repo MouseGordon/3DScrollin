@@ -1,0 +1,49 @@
+:root {
+}
+
+.header {
+    width: auto;
+    height: auto;
+    color: rgb(255, 255, 255);
+    font-size: 150px;
+    -unity-text-align: upper-center;
+    text-overflow: clip;
+    padding-top: 100px;
+    -unity-font-definition: url("project://database/Packages/com.unity.render-pipelines.core/Runtime/Debugging/Prefabs/Fonts/PerfectDOSVGA437.ttf?fileID=12800000&guid=74a5091d8707f334b9a5c31ef71a64ba&type=3#PerfectDOSVGA437");
+}
+
+.mainmenubutton {
+    width: 400px;
+    height: 200px;
+    align-self: center;
+    border-top-left-radius: 33px;
+    border-top-right-radius: 33px;
+    border-bottom-right-radius: 33px;
+    border-bottom-left-radius: 33px;
+    font-size: 100px;
+    color: rgb(255, 255, 255);
+    -unity-font-definition: url("project://database/Packages/com.unity.render-pipelines.core/Runtime/Debugging/Prefabs/Fonts/PerfectDOSVGA437.ttf?fileID=12800000&guid=74a5091d8707f334b9a5c31ef71a64ba&type=3#PerfectDOSVGA437");
+    background-color: rgb(0, 135, 123);
+    border-left-color: rgb(0, 255, 232);
+    border-right-color: rgb(0, 255, 232);
+    border-top-color: rgb(0, 255, 232);
+    border-bottom-color: rgb(0, 255, 232);
+    border-top-width: 10px;
+    border-right-width: 10px;
+    border-bottom-width: 10px;
+    border-left-width: 10px;
+    -unity-text-align: middle-right;
+    -unity-font-style: normal;
+    padding-top: 0;
+    margin-top: 204px;
+}
+
+.mainmenubutton:hover {
+    scale: 1.1 1.1;
+    -unity-text-outline-color: rgb(0, 135, 123);
+    -unity-text-outline-width: 0;
+    background-color: rgb(0, 212, 193);
+}
+
+.backgroundUI {
+}
