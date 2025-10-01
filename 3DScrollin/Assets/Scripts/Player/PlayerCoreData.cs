@@ -1,25 +1,17 @@
+using Health;
 using Player.Gravity;
 using Player.Jump;
 using Player.Movement;
 using Player.Stamina;
-using SaveSystems;
 using UnityEngine;
 
 namespace Player{
     [CreateAssetMenu(fileName = "PlayerCoreData", menuName = "Scriptable Objects/PlayerCoreData")]
     public class CoreCharacterData : ScriptableObject,ICoreCharacterData{
-        public float Health{
-            get => health;
-            set => health = value;
-        }
-
-        public float MaxHealth => maxHealth;
+        public IHealthData HealthData => healthData;
         public IStaminaData StaminaData => staminaData;
-
         public IGravityData GravityData => gravityData;
-
         public IJumpData JumpData => jumpData;
-
         public IMovementData MovementData => movementData;
 
 
@@ -29,11 +21,11 @@ namespace Player{
         [SerializeField] private PlayerMovementData movementData;
         [SerializeField] private PlayerGravityData gravityData;
         [SerializeField] private PlayerJumpData jumpData;
+        [SerializeField] private HealthData healthData;
     }
 
     public interface ICoreCharacterData{
-        float Health { get; set; }
-        float MaxHealth { get; }
+        IHealthData HealthData { get;}
         IMovementData MovementData { get; }
         IStaminaData StaminaData { get; }
         IGravityData GravityData{ get; }

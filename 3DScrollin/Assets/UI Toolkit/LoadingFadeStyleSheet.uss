@@ -1,0 +1,16 @@
+VisualElement {
+}
+
+.container {
+    opacity: 1;
+    transition-duration: 1s;
+    transition-property: opacity;
+    transition-delay: 0.2s;
+    transition-timing-function: ease-out;
+    top: auto;
+    background-color: rgb(0, 0, 0);
+}
+
+.container.hidden {
+    opacity: 0;
+}

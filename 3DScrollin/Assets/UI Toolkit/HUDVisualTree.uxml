@@ -1,0 +1,6 @@
+<ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="project://database/Assets/UI%20Toolkit/HUDUSSFile.uss?fileID=7433441132597879392&amp;guid=7b77d32c41e68ad478002fb313edbed8&amp;type=3#HUDUSSFile" />
+    <ui:VisualElement name="Radial" class="stamina-radial radial-background" style="top: 20px; left: 1704px;">
+        <ui:VisualElement name="Fill" class="stamina-fill radial-fill" style="align-self: center; top: 5px; left: 5px;" />
+    </ui:VisualElement>
+</ui:UXML>

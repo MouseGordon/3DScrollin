@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 731b9a014acb4dd5aea60c43b892d01a, type: 3}
   m_Name: PlayerStaminaData
   m_EditorClassIdentifier: 
-  _stamina: 10
-  _maxStamina: 10
+  _stamina: 1.9060118
+  _maxStamina: 2
   _staminaRecoveryRate: 1
   _staminaDrainRate: 1
   _exhaustionThreshold: 0.6
